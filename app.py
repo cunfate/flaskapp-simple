@@ -3,11 +3,13 @@
 from flask import Flask, render_template
 from flask import request
 from flask_script import Manager
+from flask_bootstrap import Bootstrap
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
 manager = Manager(app)
+bootstrap = Bootstrap(app)
 
 
 @app.route('/')
