@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, render_template, session, redirect, url_for
+from flask import Flask, render_template, session, redirect, url_for, flash
 from flask import request
 from flask_script import Manager
 from flask_bootstrap import Bootstrap
@@ -24,13 +24,16 @@ class NameForm(Form):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    name = None
     form = NameForm()
     if form.validate_on_submit():
         # name = form.name.data
+        oldName = session.get('name')
+        if oldName is not None and oldName != form.name.data:
+            flash('looks like you have changed your name!')
         session['name'] = form.name.data
         return redirect(url_for('index'))
-    return render_template('index-test.html', name=session['name'], form=form)
+    return render_template('index-test.html',
+                           name=session.get('name'), form=form)
 
 
 @app.route('/hello')
