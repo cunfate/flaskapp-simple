@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from flask import Flask, render_template
+from flask import Flask, render_template, session, redirect, url_for
 from flask import request
 from flask_script import Manager
 from flask_bootstrap import Bootstrap
@@ -27,9 +27,10 @@ def index():
     name = None
     form = NameForm()
     if form.validate_on_submit():
-        name = form.name.data
-        form.name.data = ''
-    return render_template('index-test.html', name=name, form=form)
+        # name = form.name.data
+        session['name'] = form.name.data
+        return redirect(url_for('index'))
+    return render_template('index-test.html', name=session['name'], form=form)
 
 
 @app.route('/hello')
