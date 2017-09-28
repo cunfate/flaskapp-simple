@@ -6,6 +6,7 @@ from flask_script import Manager, Shell
 from flask_bootstrap import Bootstrap
 from flask_wtf import FlaskForm as Form
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate, MigrateCommand
 from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 import os
@@ -22,6 +23,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = \
     'mysql+pymysql://%s:%s@127.0.0.1/flaskapp?charset=utf8'\
     % (mysql_username, mysql_pwd)
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 class Role(db.Model):
@@ -91,7 +93,10 @@ def helloname(name):
 
 def make_shell_context():
     return dict(app=app, db=db, Role=Role, User=User)
+
+
 manager.add_command("shell", Shell(make_context=make_shell_context))
+manager.add_command('db', MigrateCommand)
 
 
 if __name__ == '__main__':
