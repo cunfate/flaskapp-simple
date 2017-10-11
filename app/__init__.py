@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_email import Mail
 from flask_moment import Moment
@@ -18,9 +18,9 @@ def create_app(config_name):
     config[config_name].init_app(app)
 
     bootstrap.init_app(app)
-    mail.init_app()
-    moment.init_app()
-    db.init_app()
+    mail.init_app(app)
+    moment.init_app(app)
+    db.init_app(app)
 
     # routes and errors
     from .main import main as main_blueprint
