@@ -24,17 +24,29 @@ class DevelopmentConfig(Config):
     DEBUG = True
     mysql_username = os.getenv('MYSQL_USERNAME')
     mysql_pwd = os.getenv('MYSQL_PWD_FLASK')
+    develop_database = os.getenv('MYSQL_DEVELOP_DATABASE')
     SQLALCHEMY_DATABASE_URI = \
-        'mysql+pymysql://%s:%s@127.0.0.1/flaskapp?charset=utf8'\
-        % (mysql_username, mysql_pwd)
+        'mysql+pymysql://%s:%s@127.0.0.1/%s?charset=utf8'\
+        % (mysql_username, mysql_pwd, develop_database)
 
 
 class TestingConfig(Config):
     TESTING = True
+    mysql_username = os.getenv('MYSQL_USERNAME')
+    mysql_pwd = os.getenv('MYSQL_PWD_FLASK')
+    test_database = os.getenv('MYSQL_TEST_DATABASE')
+    SQLALCHEMY_DATABASE_URI = \
+        'mysql+pymysql://%s:%s@127.0.0.1/%s?charset=utf8'\
+        % (mysql_username, mysql_pwd, test_database)
 
 
 class ProductionConfig(Config):
-    pass
+    mysql_username = os.getenv('MYSQL_USERNAME')
+    mysql_pwd = os.getenv('MYSQL_PWD_FLASK')
+    product_database = os.getenv('MYSQL_PRODUCT_DATABASE')
+    SQLALCHEMY_DATABASE_URI = \
+        'mysql+pymysql://%s:%s@127.0.0.1/%s?charset=utf8'\
+        % (mysql_username, mysql_pwd, product_database)
 
 
 config = {
