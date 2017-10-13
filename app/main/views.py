@@ -27,4 +27,4 @@ def index():
             flash('looks like you have changed your name!')
         session['name'] = form.name.data
         return redirect(url_for('.index'))
-    return render_template('index-test.html', current_user=username)
+    return render_template('index-test.html')
