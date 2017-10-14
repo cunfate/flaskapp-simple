@@ -6,13 +6,13 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY_FLASK')
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    MAIL_SERVER = 'smtp.googlemail.com'
-    MAIl_PORT = 587
+    MAIL_SERVER = 'smtp.163.com'
+    MAIl_PORT = 465
     MAIL_UES_TLS = True
     MAIL_USER_NAME = os.environ.get('MAIL_USERNAME') or 'null'
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD') or 'null'
     FLASKY_MAIL_SUBJECT_PREFIX = '[FLASKY]'
-    FLASKY_MAIL_SENDER = 'Flasky Admin <flasky@example.com>'
+    FLASKY_MAIL_SENDER = 'Flasky Admin <zhangcun216@163.com>'
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
 
     @staticmethod

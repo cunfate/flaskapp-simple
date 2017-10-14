@@ -1,9 +1,11 @@
 from flask import render_template, redirect, url_for, flash, request
-from flask_login import login_user, logout_user
+from flask_login import login_user, logout_user, current_user, login_required
 from . import auth
 from .forms import LoginForm, RegistrationForm
 from ..models import User
 from .. import db
+from ..email import send_email
+from flask import current_app
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -20,6 +22,7 @@ def login():
 
 
 @auth.route('/logout')
+@login_required
 def logout():
     logout_user()
     flash('You have been log out')
@@ -35,6 +38,21 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         db.session.commit()
+        token = user.generate_confirm_token()
+        send_email(user.email, 'Confirm your account - flaskapp',
+                   'auth/email/confirm', user=user, token=token)
+        flash('a confirmation email has been sent to your email address')
         flash('Now you can login')
         return redirect(url_for(auth.login))
     return render_template('auth/register.html', form=form)
+
+@auth.route('/confirm/<token>')
+@login_required
+def confirm(token):
+    if current_user.confirmed:
+        return redirect(url_for('main.index'))
+    if current_user.confirm(token):
+        flash('You have confirmed your account! thanks!')
+    else:
+        flash('The confirmation url is invalid.')
+    return redirect(url_for('main.index'))
