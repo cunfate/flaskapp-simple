@@ -37,14 +37,21 @@ def register():
                     email=form.email.data,
                     password=form.password.data)
         db.session.add(user)
-        db.session.commit()
         token = user.generate_confirm_token()
-        send_email(user.email, 'Confirm your account - flaskapp',
-                   'auth/email/confirm', user=user, token=token)
+        print(user.email + 'is sending target')
+        try:
+            send_email(user.email, 'Confirm your account - flaskapp',
+                       'auth/email/confirm', user=user, token=token)
+        except:
+            db.session.delete(user)
+            flash('send email fail!')
+            return redirect(url_for('auth.login'))
         flash('a confirmation email has been sent to your email address')
         flash('Now you can login')
-        return redirect(url_for(auth.login))
+        db.session.commit()
+        return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
+
 
 @auth.route('/confirm/<token>')
 @login_required
