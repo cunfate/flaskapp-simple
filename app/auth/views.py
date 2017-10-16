@@ -4,7 +4,7 @@ from . import auth
 from .forms import LoginForm, RegistrationForm
 from ..models import User
 from .. import db
-from ..email import send_email
+from ..email import send_email, send_mail_smtp
 from flask import current_app
 
 
@@ -38,13 +38,15 @@ def register():
                     password=form.password.data)
         db.session.add(user)
         token = user.generate_confirm_token()
-        print(user.email + 'is sending target')
+        print(user.email + ' is sending target')
         try:
-            send_email(user.email, 'Confirm your account - flaskapp',
-                       'auth/email/confirm', user=user, token=token)
-        except:
-            db.session.delete(user)
+            send_mail_smtp(user.email, 'Confirm your account - flaskapp',
+                            'auth/email/confirm', user=user, token=token)
+        except Exception as e:
+            print(e)
+            # db.session.delete(user)
             flash('send email fail!')
+            flash(url_for('auth.confirm', token=token, _external=True))
             return redirect(url_for('auth.login'))
         flash('a confirmation email has been sent to your email address')
         flash('Now you can login')
