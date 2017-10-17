@@ -39,6 +39,7 @@ def send_mail_smtp(to, subject, template, **kwargs):
     server = None
     try:
         server = smtplib.SMTP("smtp.qq.com")
+        sever.connect()
     except Exception as e:
         print("get Exception in email.py, SMTP_SSL", e)
     try:

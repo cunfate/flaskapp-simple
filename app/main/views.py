@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import render_template, session, redirect, url_for, flash
+from flask import render_template, session, redirect, url_for, flash, abort
 
 from . import main
 from .forms import NameForm
@@ -35,3 +35,11 @@ def index():
 @admin_required
 def for_admins_only():
     return 'For admins only!'
+
+
+@main.route('/user/<username>')
+def user_page(username):
+    user = User.query.filter_by(username=username).first()
+    if user is None:
+        abort(404)
+    return render_template('user.html', user=user)

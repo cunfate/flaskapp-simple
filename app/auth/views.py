@@ -5,7 +5,7 @@ from .forms import LoginForm, RegistrationForm
 from ..models import User
 from .. import db
 from ..email import send_email, send_mail_smtp
-from flask import current_app
+# from flask import current_app
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -37,27 +37,28 @@ def register():
                     email=form.email.data,
                     password=form.password.data)
         db.session.add(user)
+        db.session.commit()
         token = user.generate_confirm_token()
         print(user.email + ' is sending target')
         try:
             send_mail_smtp(user.email, 'Confirm your account - flaskapp',
-                            'auth/email/confirm', user=user, token=token)
+                           'auth/email/confirm', user=user, token=token)
         except Exception as e:
             print(e)
             # db.session.delete(user)
             flash('send email fail!')
             flash(url_for('auth.confirm', token=token, _external=True))
+            print(url_for('auth.confirm', token=token, _external=True))
             return redirect(url_for('auth.login'))
         flash('a confirmation email has been sent to your email address')
         flash('Now you can login')
-        db.session.commit()
         return redirect(url_for('auth.login'))
     return render_template('auth/register.html', form=form)
 
 
 @auth.route('/confirm/<token>')
-@login_required
 def confirm(token):
+    print('confirming url\n')
     if current_user.confirmed:
         return redirect(url_for('main.index'))
     if current_user.confirm(token):
@@ -65,3 +66,17 @@ def confirm(token):
     else:
         flash('The confirmation url is invalid.')
     return redirect(url_for('main.index'))
+
+
+@auth.before_app_request
+def before_request():
+    if current_user.is_authenticated:
+        current_user.ping()
+        if not current_user.confirmed \
+                and request.endpoint[:5] != 'auth.':
+            return redirect(url_for('auth.unconfirmed'))
+
+
+@auth.route('/unconfirmed')
+def unconfirmed():
+    return render_template('unconfirmed.html')
