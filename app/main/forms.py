@@ -13,3 +13,8 @@ class EditProfileForm(FlaskForm):
     location = StringField('Location', validators=[Length(0, 64)])
     about_me = TextAreaField('About me')
     submit = SubmitField('Submit')
+
+
+class PostForm(FlaskForm):
+    body = TextAreaField('Artical', validators=[Required()])
+    submit = SubmitField('Submit')
