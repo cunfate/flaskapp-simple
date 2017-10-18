@@ -18,11 +18,14 @@
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<li><a href="/">Home</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
 				<li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
 				<li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
 				<li>
 					<a href="{{ url_for('main.user_page', username=current_user.username) }}">Profile</a>
 				</li>
+			</ul>
 			</ul>
 		</div>
 	</div>
