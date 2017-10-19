@@ -3,33 +3,43 @@ from flask import render_template, session, redirect, url_for, flash, abort
 from flask_login import current_user, login_required
 
 from . import main
-from .forms import NameForm, EditProfileForm
+from .forms import EditProfileForm, PostForm
 from .. import db
-from ..models import User
+from ..models import User, Permission, Post
 from ..decorators import admin_required
 
 
 @main.route('/', methods=['GET', 'POST'])
 def index():
-    form = NameForm()
-    # username = None
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if(user is None):
-            user = User(username=form.name.data)
-            db.session.add(user)
-            db.session.commit()
-            session['Known'] = False
-        else:
-            session['Known'] = True
-            # username = user
-        # name = form.name.data
-        oldName = session.get('name')
-        if oldName is not None and oldName != form.name.data:
-            flash('looks like you have changed your name!')
-        session['name'] = form.name.data
+    # form = NameForm()
+    # # username = None
+    # if form.validate_on_submit():
+        # user = User.query.filter_by(username=form.name.data).first()
+        # if(user is None):
+            # user = User(username=form.name.data)
+            # db.session.add(user)
+            # db.session.commit()
+            # session['Known'] = False
+        # else:
+            # session['Known'] = True
+            # # username = user
+        # # name = form.name.data
+        # oldName = session.get('name')
+        # if oldName is not None and oldName != form.name.data:
+            # flash('looks like you have changed your name!')
+        # session['name'] = form.name.data
+        # return redirect(url_for('.index'))
+    # return render_template('index-test.html')
+    form = PostForm()
+    if current_user.can(Permission.WRITE_ARTICLES) and \
+            form.validate_on_submit():
+        post = Post(body=form.body.data,
+                    author=current_user._get_current_object())
+        db.session.add(post)
+        db.session.commit()
         return redirect(url_for('.index'))
-    return render_template('index-test.html')
+    posts = Post.query.order_by(Post.timestamp.desc()).all()
+    return render_template('index.html', form=form, posts=posts)
 
 
 @main.route('/admin')
