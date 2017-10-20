@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import Required, Length
+from flask_pagedown.fields import PageDownField
 
 
 class NameForm(FlaskForm):
@@ -16,5 +17,5 @@ class EditProfileForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    body = TextAreaField('Artical', validators=[Required()])
+    body = PageDownField('Artical', validators=[Required()])
     submit = SubmitField('Submit')
