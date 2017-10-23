@@ -51,7 +51,7 @@ class Role(db.Model):
 
 class Follow(db.Model):
     __tablename__ = 'follows'
-    Follower_id = db.Column(db.Integer, db.ForeignKey('users.id'),
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                             primary_key=True)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'),
                             primary_key=True)
@@ -73,13 +73,15 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     followed = db.relationship('Follow',
-                               foreign_keys=[Follow.Follower_id],
+                               foreign_keys=[Follow.follower_id],
                                backref=db.backref('follower', lazy='joined'),
-                               cascad='all, delete-orphan')
+                               lazy='dynamic',
+                               cascade='all, delete-orphan')
     followers = db.relationship('Follow',
-                                foreign_keys=[Follow.Followed_id],
+                                foreign_keys=[Follow.followed_id],
                                 backref=db.backref('followed', lazy='joined'),
-                                cascad='all, delete-orphan')
+                                lazy='dynamic',
+                                cascade='all, delete-orphan')
 
     def __init__(self, **kwargs):
         super(User, self).__init__(**kwargs)
@@ -178,6 +180,11 @@ class User(UserMixin, db.Model):
 
     def is_followed_by(self, user):
         return self.followers.filter_by(follower_id=user.id).first() is not None
+
+    @property
+    def followed_posts(self):
+        return Post.query.join(Follow, Follow.follower_id == Post.author_id)\
+            .filter(Follow.follower_id == self.id)
 
 
 class AnonymousUser(AnonymousUserMixin):
