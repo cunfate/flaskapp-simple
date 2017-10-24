@@ -4,9 +4,9 @@ from flask import request, make_response
 from flask_login import current_user, login_required
 
 from . import main
-from .forms import EditProfileForm, PostForm
+from .forms import EditProfileForm, PostForm, CommentForm
 from .. import db
-from ..models import User, Permission, Post
+from ..models import User, Permission, Post, Comment
 from ..decorators import permission_required
 from ..decorators import admin_required
 
@@ -75,7 +75,22 @@ def edit_profile():
 @main.route('/post/<int:id>')
 def post(id):
     post = Post.query.get_or_404(id)
-    return render_template('post.html', posts=[post])
+    form = CommentForm()
+    if form.validate_on_submit():
+        comment = Comment(body=form.body.data,
+                          post=post,
+                          author=current_user._get_current_object())
+        db.session.add(comment)
+        flash('You comment has been published')
+        return redirect(url_for('.post', id=post.id, page=-1))
+    page = request.args.get('page', 1, type=int)
+    if page == -1:
+        page = (post.comments.count() - 1) / 20 + 1
+    pagination = post.comments.order_by(Comment.timestamp.asc()).paginate(
+        page, per_page=20, error_out=False)
+    comments = pagination.items
+    return render_template('post.html', posts=[post], form=form,
+                           comments=comments, pagination=pagination)
 
 
 @main.route('/follow/<username>')
@@ -150,7 +165,7 @@ def followed_by(username):
         return redirect(url_for('.index'))
     page = request.args.get('page', 1, type=int)
     pagination = user.followed.paginate(page, per_page=20, error_out=False)
-    follows = [{'user': item.follower, 'timestamp': item.timestamp}
+    follows = [{'user': item.followed, 'timestamp': item.timestamp}
                for item in pagination.items]
     return render_template('follows.html', user=user, title='Followed by',
                            endpoint='.followed_by', pagination=pagination,

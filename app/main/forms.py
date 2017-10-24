@@ -19,3 +19,8 @@ class EditProfileForm(FlaskForm):
 class PostForm(FlaskForm):
     body = PageDownField('Artical', validators=[Required()])
     submit = SubmitField('Submit')
+
+
+class CommentForm(FlaskForm):
+    body = StringField('', validators=[Required()])
+    submit = SubmitField('Submit')
