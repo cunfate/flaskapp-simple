@@ -21,3 +21,9 @@ def internaleror(message):
     response = jsonify({'error': 'internal server error', 'message': message})
     response.status_code = 500
     return response
+
+
+def unauthorized(message):
+    response = jsonify({'error': 'unauthorized', 'message': message})
+    response.status_code = 401
+    return response
