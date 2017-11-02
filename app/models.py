@@ -110,7 +110,6 @@ class User(UserMixin, db.Model):
 
     def generate_confirm_token(self, expiration=3600):
         s = Serializer(current_app.config['SECRET_KEY'], expiration)
-        print('confirm src is', current_app.config['SECRET_KEY'])
         return s.dumps({'confirm': self.id})
 
     def generate_auth_token(self, expiration):
@@ -265,10 +264,10 @@ class Post(db.Model):
             'body': self.body,
             'body_html': self.body_html,
             'timestamp': self.timestamp,
-            'author': url_for('api.get_user', id=self.author_id,
-                              _external=True),
-            'comments': url_for('api.get_post_comments', id=self.id,
-                                _external=True),
+            # 'author': url_for('api.get_user', id=self.author_id,
+                              # _external=True),
+            # 'comments': url_for('api.get_post_comments', id=self.id,
+                                # _external=True),
             'comment_count': self.comments.count()
         }
         return json_post
