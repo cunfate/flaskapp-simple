@@ -2,6 +2,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField
 from wtforms.validators import Required, Length
 from flask_pagedown.fields import PageDownField
+from flask_wtf.file import FileField, FileRequired
+from werkzeug.utils import secure_filename
 
 
 class NameForm(FlaskForm):
@@ -23,4 +25,9 @@ class PostForm(FlaskForm):
 
 class CommentForm(FlaskForm):
     body = StringField('', validators=[Required()])
+    submit = SubmitField('Submit')
+
+
+class AvatarForm(FlaskForm):
+    avatar = FileField(validators=[FileRequired()])
     submit = SubmitField('Submit')

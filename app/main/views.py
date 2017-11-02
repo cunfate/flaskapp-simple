@@ -1,10 +1,12 @@
 from datetime import datetime
 from flask import render_template, session, redirect, url_for, flash, abort
-from flask import request, make_response
+from flask import request, make_response, current_app
 from flask_login import current_user, login_required
+from werkzeug import secure_filename
+import os
 
 from . import main
-from .forms import EditProfileForm, PostForm, CommentForm
+from .forms import EditProfileForm, PostForm, CommentForm, AvatarForm
 from .. import db
 from ..models import User, Permission, Post, Comment
 from ..decorators import permission_required
@@ -186,3 +188,20 @@ def show_followed():
     resp = make_response(redirect(url_for('.index')))
     resp.set_cookie('show_followed', '1', max_age=30*24*60*60)
     return resp
+
+
+@main.route('/avatar', methods=['GET','POST'])
+@login_required
+def change_avatar():
+    form = AvatarForm()
+    if form.validate_on_submit():
+        f = form.avatar.data
+        filename = secure_filename(f.filename)
+        f.save(
+            os.path.join(
+                current_app.config['AVATAR_PATH'], current_user.id + '.' +
+                os.path.splitext(filename)[-1]
+            )
+        )
+        return redirect(url_for('.user_page', username=current_user.username))
+    return render_template('upavatar.html', form=form)
