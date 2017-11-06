@@ -199,7 +199,7 @@ def change_avatar():
         filename = secure_filename(f.filename)
         f.save(
             os.path.join(
-                current_app.config['AVATAR_PATH'], current_user.id + '.' +
+                current_app.config['AVATAR_PATH'], str(current_user.id) +
                 os.path.splitext(filename)[-1]
             )
         )
