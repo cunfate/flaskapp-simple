@@ -203,5 +203,11 @@ def change_avatar():
                 os.path.splitext(filename)[-1]
             )
         )
+        current_user.set_avatar_url(
+            os.path.join(
+                current_app.config['AVATAR_PATH'], str(current_user.id) +
+                os.path.splitext(filename)[-1]
+            )
+        )
         return redirect(url_for('.user_page', username=current_user.username))
     return render_template('upavatar.html', form=form)

@@ -74,6 +74,7 @@ class User(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime(), default=datetime.utcnow)
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     comments = db.relationship('Comment', backref='author', lazy='dynamic')
+    avatar_url = db.Column(db.String(64))
     followed = db.relationship('Follow',
                                foreign_keys=[Follow.follower_id],
                                backref=db.backref('follower', lazy='joined'),
@@ -214,6 +215,17 @@ class User(UserMixin, db.Model):
             'post_count': self.posts.count()
         }
         return json_user
+
+    def get_avatar_url(self):
+        return self.avatar_url
+
+    def set_avatar_url(self, name):
+        if name:
+            self.avatar_url = name
+        else:
+            self.avatar_url = 'null'
+        db.session.add(self)
+        db.session.commit()
 
 
 class AnonymousUser(AnonymousUserMixin):
