@@ -2,8 +2,8 @@
     {% for post in posts %}
     <li class="post">
         <div class="post-thumbnail">
-            <a href="{{ url_for('.user', username=post.author.username) }}">
-				<img class="img-rounded profile-thumbnail" src="{{ post.author.get_avatar_url() }}">
+            <a href="{{ url_for('.user_page', username=post.author.username) }}">
+				{% if post.author.get_avatar_url() != 'null' %}<img class="img-rounded profile-thumbnail" src="{{ post.author.get_avatar_url() }}">{% endif %}
             </a>
         </div>
         <div class="post-content">
