@@ -3,7 +3,7 @@
     <li class="post">
         <div class="post-thumbnail">
             <a href="{{ url_for('.user_page', username=post.author.username) }}">
-				{% if post.author.get_avatar_url() != 'null' %}<img class="img-rounded profile-thumbnail" src="{{ url_for('static', filename=post.author.get_avatar_url()) }}">{% endif %}
+				{% if post.author.get_avatar_url() %}<img class="img-rounded profile-thumbnail" src="{{ url_for('static', filename=post.author.get_avatar_url()) }}">{% endif %}
             </a>
         </div>
         <div class="post-content">

@@ -217,7 +217,10 @@ class User(UserMixin, db.Model):
         return json_user
 
     def get_avatar_url(self):
-        return self.avatar_url
+        if self.avatar_url is not None and self.avatar_url.__len__() > 0:
+            return self.avatar_url
+        else:
+            return None
 
     def set_avatar_url(self, name):
         if name:
