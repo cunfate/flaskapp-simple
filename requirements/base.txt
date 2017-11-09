@@ -23,3 +23,4 @@ Flask-Pagedown
 Markdown
 Bleach
 Flask-Httpauth
+Pillow==4.3.0

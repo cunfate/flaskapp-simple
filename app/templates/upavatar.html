@@ -5,10 +5,16 @@
 
 {% block page_content %}
 <div class="page-header">
+</div>
+<div class="container">
+	<!--<script src="{{ url_for('static', filename="js/cropavatar.js") }}">-->
+	<img class="requiresjcrop" id="avatar_upload" src="{{ url_for('static', filename=current_user.get_avatar_url()) }}"></img>
 	<form action="{{ url_for('main.change_avatar') }}" method="POST" enctype="multipart/form-data">
 		{{ form.avatar }}
 		{{ form.submit }}
+		<input class="btn btn-default btn-upfile" id="submit" name="submit" type="submit" value="Submit">
 		{{ form.csrf_token }}
 	</form>
+	<button class="btn btn-default" id="btn-confirm-crop">Crop Done</button>
 </div>
 {% endblock %}

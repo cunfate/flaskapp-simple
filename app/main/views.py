@@ -3,7 +3,9 @@ from flask import render_template, session, redirect, url_for, flash, abort
 from flask import request, make_response, current_app
 from flask_login import current_user, login_required
 from werkzeug import secure_filename
+from PIL import Image
 import os
+import json
 
 from . import main
 from .forms import EditProfileForm, PostForm, CommentForm, AvatarForm
@@ -190,7 +192,7 @@ def show_followed():
     return resp
 
 
-@main.route('/avatar', methods=['GET','POST'])
+@main.route('/avatar', methods=['GET', 'POST'])
 @login_required
 def change_avatar():
     form = AvatarForm()
@@ -212,3 +214,18 @@ def change_avatar():
         )
         return redirect(url_for('.user_page', username=current_user.username))
     return render_template('upavatar.html', form=form)
+
+
+@main.route('/avtarcrop', methods=['GET', 'POST'])
+@login_required
+def crop_avtar():
+    if request.accept_mimetypes.accept_json:
+        path = os.path.join(
+                './static/' + current_app.config['AVATAR_PATH'],
+                current_user.get_avatar_url()
+        )
+        img = Image.open(path)
+        local = json.loads(request.json)
+        region = img.crop(local['x'], local['y'], local['x2'], local['y2'])
+        region.save(path)
+    return request.json
