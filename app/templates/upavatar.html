@@ -7,8 +7,10 @@
 <div class="page-header">
 </div>
 <div class="container">
-	<script src="/static/js/cropavatar.js"></script>
-	<script src="/static/js/cropavatar.js"></script>
+	<script src="{{ url_for('static', filename='js/cropavtar.js', _external=True) }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.min.js', _external=True) }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.color.js', _external=True) }}"></script>
+	<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js', _external=True) }}"></script>
 	<img class="requiresjcrop" id="avatar_upload" src="{{ url_for('static', filename=current_user.get_avatar_url()) }}"></img>
 	<form action="{{ url_for('main.change_avatar') }}" method="POST" enctype="multipart/form-data">
 		{{ form.avatar }}
