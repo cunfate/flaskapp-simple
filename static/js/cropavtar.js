@@ -40,7 +40,9 @@ jQuery(function($){
 		return jcrop_api.tellSelect();
 	}
 
-	$(".btn-upfile").onClick(function() {
+	function releaseCheck() {}
+
+	$(".btn-upfile").click(function() {
 		var formData = new FormData();
 		formData.append('file', $("#file")[0].files[0]);
 		$.ajax({
@@ -58,7 +60,7 @@ jQuery(function($){
 		})
 	});
 
-	$("#btn-confirm-crop").onClick(
+	$("#btn-confirm-crop").click(
 			function() {
 				var selection = jcrop_api.tellSelect();
 				$.ajax({
