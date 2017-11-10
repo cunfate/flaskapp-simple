@@ -201,7 +201,7 @@ def change_avatar():
         filename = secure_filename(f.filename)
         f.save(
             os.path.join(
-                './static/' + current_app.config['AVATAR_PATH'],
+                './app/static/' + current_app.config['AVATAR_PATH'],
                 str(current_user.id) +
                 os.path.splitext(filename)[-1]
             )
@@ -216,16 +216,20 @@ def change_avatar():
     return render_template('upavatar.html', form=form)
 
 
-@main.route('/avtarcrop', methods=['GET', 'POST'])
+@main.route('/avatarcrop', methods=['GET', 'POST'])
 @login_required
 def crop_avtar():
     if request.accept_mimetypes.accept_json:
-        path = os.path.join(
-                './static/' + current_app.config['AVATAR_PATH'],
-                current_user.get_avatar_url()
-        )
+        path = os.path.join('./app/static/', current_user.get_avatar_url())
         img = Image.open(path)
-        local = json.loads(request.json)
-        region = img.crop(local['x'], local['y'], local['x2'], local['y2'])
+        # local = json.loads(request.json)
+        local = (request.json)
+        print(local)
+        print(local['x'])
+        print(local['x2'])
+        crop_box = (local['x'], local['y'],
+                        local['x2'], local['y2'])
+        # x = local['x']
+        region = img.crop(crop_box)
         region.save(path)
-    return request.json
+    return '<h1>OK!</h1>'
