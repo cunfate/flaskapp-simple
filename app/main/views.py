@@ -232,4 +232,4 @@ def crop_avtar():
         # x = local['x']
         region = img.crop(crop_box)
         region.save(path)
-    return '<h1>OK!</h1>'
+        return '{"a":true}'

@@ -55,12 +55,12 @@ jQuery(function($){
 		data: formData,
 		processData: false,
 		contentType: false
-		}).done(function(res){
+		}).success(function(res, code, obj){
 			before_path = $('#avatar_upload').attr("src");
 			after_path = before_path + "?t=&" + Math.random();
 			$('#avatar_upload').attr('src', after_path);
-		}).fail(function(res){
-		})
+			console.log(after_path);
+		});
 	});
 
 	$("#btn-confirm-crop").click(
@@ -73,11 +73,11 @@ jQuery(function($){
 					contentType: 'application/json; charset=utf-8',
 					dataType: 'json',
 					async: false
-				}).done(function(res){
+				}).success(function(res, code, obj){
 					before_path = $('#avatar_upload').attr("src");
 					after_path = before_path + "?t=&" + Math.random();
 					$('#avatar_upload').attr('src', after_path);
-				}).fail(function(res){
+					console.log(after_path);
 				});
 			}
 			)
