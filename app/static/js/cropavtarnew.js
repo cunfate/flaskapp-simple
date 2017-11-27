@@ -27,10 +27,11 @@ var readImgFile = function(file, img, container) {
 }
 
 // function to preview image
-var loadImageFile() = function() {
+var loadImageFile = function() {
 	var rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
-	if(document.getElementById("uploadimageinput").files.length === 0) return;
-	var oFile = document.getElementById("uploadimageinput").files[0];
+	inputFile = document.getElementById("avatar");
+	if(inputFile.files.length === 0) return;
+	var oFile = inputFile.files[0];
 	//test file types like:
 	if(!rFilter.test(oFile.type)) {
 		alter("You must select a valid image file"); 
@@ -39,7 +40,7 @@ var loadImageFile() = function() {
 	oFReader = new FileReader();
 	oFReader.onload = function(event) {
 		//bin code image src code
-		document.getElementById("uploadimageshow").src = event.target.result;
+		document.getElementById("upLoadShow").src = event.target.result;
 	}
 	oFReader.readAsDataURL(oFile);
 }

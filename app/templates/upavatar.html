@@ -12,11 +12,13 @@
 	<script src="{{ url_for('static', filename='js/jquery.color.js', _external=True) }}"></script>
 	<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js', _external=True) }}"></script>
 	<script src="{{ url_for('static', filename='js/cropavtar.js', _external=True) }}"></script>
+	<script src="{{ url_for('static', filename='js/cropavtarnew.js', _external=True) }}"></script>
 	<script>
 		$(document).ready(
 				function() {
 					$("#modaltest").on("click", function() {
 						$("#cropModal").modal("show");
+						loadImageFile();
 					});
 				});
 	</script>
