@@ -45,6 +45,35 @@ var loadImageFile = function() {
 	oFReader.readAsDataURL(oFile);
 }
 
-var showImageCropperModelBox = function() {
-	
+var initCropper = function() {
+	var jcrop_api;
+	var initJcrop = function() {
+	  $('.requiresjcrop').hide();
+
+      // Invoke Jcrop in typical fashion
+      $('#upLoadShow').Jcrop({
+        onRelease: releaseCheck,
+      },function(){
+        	jcrop_api = this;
+        	jcrop_api.animateTo([0,0,100,100]);
+		//Set the resize function disable.
+      		jcrop_api.setOptions({ allowResize: false });
+      		jcrop_api.setOptions({ allowMove: true});
+			jcrop_api.setOptions({ allowSelect: false });
+      		jcrop_api.focus();
+
+        // Setup and dipslay the interface for "enabled"
+        // Setup and dipslay the interface for "enabled"
+        //$('#can_click,#can_move,#can_size').attr('checked','checked');
+        //$('#ar_lock,#size_lock,#bg_swap').attr('checked',false);
+			$('.requiresjcrop').show();
+		}
+
+	});
+	jcrop_api.enable();
+
+	function getSelect()
+	{
+		return jcrop_api.tellSelect();
+	}
 }
