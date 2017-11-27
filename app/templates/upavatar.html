@@ -12,6 +12,14 @@
 	<script src="{{ url_for('static', filename='js/jquery.color.js', _external=True) }}"></script>
 	<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js', _external=True) }}"></script>
 	<script src="{{ url_for('static', filename='js/cropavtar.js', _external=True) }}"></script>
+	<script>
+		$(document).ready(
+				function() {
+					$("#modaltest").on("click", function() {
+						$("#cropModal").modal("show");
+					});
+				});
+	</script>
 	<img class="requiresjcrop" id="avatar_upload" src="{{ url_for('static', filename=current_user.get_avatar_url()) }}"></img>
 	<form action="{{ url_for('main.change_avatar') }}" method="POST" enctype="multipart/form-data">
 		{{ form.avatar }}
@@ -20,8 +28,9 @@
 		{{ form.csrf_token }}
 	</form>
 	<button class="btn btn-default" id="btn-confirm-crop">Crop Done</button>
+	<button class="btn btn-default" id="modaltest" data-target="#cropModal">Test Modal</button>
 </div>
-<div class="modal fade" id="cropModal" tabindex="-1" role="dialog">
+<div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	<div class="modal-dialog" role="document">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -29,7 +38,7 @@
 				<h4 class="modal-title" id="myModalLabel">Crop Avatar</h4>
 			</div>
 			<div class="modal-body">
-			<!--------------/>img and cropper</--!>
+				<img id="upLoadShow" src="#">
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
