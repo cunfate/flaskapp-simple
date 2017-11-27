@@ -27,15 +27,23 @@ var readImgFile = function(file, img, container) {
 }
 
 // function to preview image
-var loadImageFile() {
+var loadImageFile() = function() {
+	var rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
 	if(document.getElementById("uploadimageinput").files.length === 0) return;
 	var oFile = document.getElementById("uploadimageinput").files[0];
 	//test file types like:
-	//if(!fileFilter.test(oFile.type)) {alter("You must select a valid image file");}
+	if(!rFilter.test(oFile.type)) {
+		alter("You must select a valid image file"); 
+		return;
+	}
 	oFReader = new FileReader();
 	oFReader.onload = function(event) {
-		//2 bit image src code
+		//bin code image src code
 		document.getElementById("uploadimageshow").src = event.target.result;
 	}
 	oFReader.readAsDataURL(oFile);
+}
+
+var showImageCropperModelBox = function() {
+	
 }
