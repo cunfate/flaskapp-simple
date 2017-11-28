@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Flasky - Upload Avatar{% endblock %}
+{% block scripts %}
+{{ super() }}
+<script src="{{ url_for('static', filename='js/jquery.min.js', _external=True) }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.color.js', _external=True) }}"></script>
+<script src="{{ url_for('static', filename='js/jquery.Jcrop.min.js', _external=True) }}"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.3/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='js/cropavtarnew.js', _external=True) }}"></script>
+<script>
+    $(document).ready(
+            function() {
+                console.log("ready!");
+                $("#upLoadShow").on("load", function(){
+                    if($("#upLoadShow").attr("src") === "#") return;
+                    initCropper();
+                });
+                $("#avatar-click").on("click", function() {
+                    console.log("clicked");
+                    $("#cropModal").modal("show");
+                    $("#upLoadShow").attr("style", "");
+                    loadImageFile();
+                });
+            });
+</script>
+{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+</div>
+<link rel="stylesheet" href="{{ url_for('static', filename="css/jquery.Jcrop.min.css") }}">
+<div class="container">
+    <div class="alert alert-block alert-success hide" id="upsuccess-block">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <h4>Success!</h4>You've successfully upload your pic!
+    </div>
+	<img class="requiresjcrop center-block" id="avatar_download" src="{{ url_for('static', filename=current_user.get_avatar_url()) }}"></img>
+    <button class="btn btn-default" id="avatar-click" type="submit" data-target="#cropModal">Submit</button>
+    <input class="btn btn-default" type="file" id="avatar" value="avatar">
+</div>
+<div class="modal fade" id="cropModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title" id="myModalLabel">Crop Avatar</h4>
+			</div>
+			<div class="modal-body">
+				<img id="upLoadShow" src="#">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" id="submitCropper">Submit</button>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

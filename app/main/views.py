@@ -222,14 +222,28 @@ def crop_avtar():
     if request.accept_mimetypes.accept_json:
         path = os.path.join('./app/static/', current_user.get_avatar_url())
         img = Image.open(path)
-        # local = json.loads(request.json)
         local = (request.json)
-        print(local)
-        print(local['x'])
-        print(local['x2'])
         crop_box = (local['x'], local['y'],
                         local['x2'], local['y2'])
-        # x = local['x']
         region = img.crop(crop_box)
         region.save(path)
         return '{"a":true}'
+
+
+@main.route('/avatarnew', methods=['POST'])
+@login_required
+def crop_avtar_new():
+    if request.accept_mimetypes.accept_json:
+        print(request.data)
+        print('files:')
+        print(request.files)
+        print('values:')
+        a = request.form['area']
+        print(a)
+        return '{"success":true}'
+
+
+@main.route('/avatarnew', methods=['GET'])
+@login_required
+def change_avatar_new():
+    return render_template("upavatarnew.html");

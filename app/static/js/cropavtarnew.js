@@ -1,32 +1,4 @@
-var handler = {
-	init: function(container) {
-		container.on("dragover", function(event){
-			event.preventDefault();
-		});
-		container.on("drop", function(event){
-			event.preventDefault();
-			var file = event.originalEvent.dataTransfer.files[0];
-			handler.handleDrop($(this), file);
-		})
-	}
-};
-
-var readImgFile = function(file, img, container) {
-	var reader = new FileReader(file);
-	if(file.type.split("/")[0] !== "image") {
-		return;
-	}
-
-	reader.onLoad = function(event) {
-		var base64 = event.target.result;
-		img.attr("src", baseUrl);
-		handler.compressAndUpload(img, base64, file, container);
-	}
-
-	reader.readAsDataURL(file);
-}
-
-// function to preview image
+// function to preview images
 var loadImageFile = function() {
 	var rFilter = /^(?:image\/bmp|image\/cis\-cod|image\/gif|image\/ief|image\/jpeg|image\/jpeg|image\/jpeg|image\/pipeg|image\/png|image\/svg\+xml|image\/tiff|image\/x\-cmu\-raster|image\/x\-cmx|image\/x\-icon|image\/x\-portable\-anymap|image\/x\-portable\-bitmap|image\/x\-portable\-graymap|image\/x\-portable\-pixmap|image\/x\-rgb|image\/x\-xbitmap|image\/x\-xpixmap|image\/x\-xwindowdump)$/i;
 	inputFile = document.getElementById("avatar");
@@ -40,40 +12,62 @@ var loadImageFile = function() {
 	oFReader = new FileReader();
 	oFReader.onload = function(event) {
 		//bin code image src code
+		console.log('load ok!');
 		document.getElementById("upLoadShow").src = event.target.result;
+		$("#upLoadShow").attr("style", "");
 	}
 	oFReader.readAsDataURL(oFile);
-}
+};
 
-var initCropper = function() {
-	var jcrop_api;
+var initCropper = (function() {
+	jcrop_api_crop = null;
 	var initJcrop = function() {
-	  $('.requiresjcrop').hide();
+	  $('#upLoadShow').hide();
 
       // Invoke Jcrop in typical fashion
       $('#upLoadShow').Jcrop({
         onRelease: releaseCheck,
       },function(){
-        	jcrop_api = this;
-        	jcrop_api.animateTo([0,0,100,100]);
-		//Set the resize function disable.
-      		jcrop_api.setOptions({ allowResize: false });
-      		jcrop_api.setOptions({ allowMove: true});
-			jcrop_api.setOptions({ allowSelect: false });
-      		jcrop_api.focus();
+        	jcrop_api_crop = this;
+        	jcrop_api_crop.animateTo([0,0,100,100]);
+			//Set the resize function disable.
+      		jcrop_api_crop.setOptions({ allowResize: false });
+      		jcrop_api_crop.setOptions({ allowMove: true});
+			jcrop_api_crop.setOptions({ allowSelect: false });
+      		jcrop_api_crop.focus();
 
-        // Setup and dipslay the interface for "enabled"
-        // Setup and dipslay the interface for "enabled"
-        //$('#can_click,#can_move,#can_size').attr('checked','checked');
-        //$('#ar_lock,#size_lock,#bg_swap').attr('checked',false);
-			$('.requiresjcrop').show();
-		}
+			$('#upLoadShow').show();
+		});
+	};
 
-	});
-	jcrop_api.enable();
+	initJcrop();
+
+	jcrop_api_crop.enable();
+	function releaseCheck(){};
 
 	function getSelect()
 	{
-		return jcrop_api.tellSelect();
+		return jcrop_api_crop.tellSelect();
 	}
-}
+
+	$("#submitCropper").on("click", function(){
+		var formData = new FormData();
+		var area = JSON.stringify(getSelect());
+		formData.append('file', $("#avatar")[0].files[0]);
+		formData.append('area', area);
+		$.ajax({
+		url: "avatarnew",
+		type: "POST",
+		cache: false,
+		data: formData,
+		dataType: "multipart/form-data",
+		processData: false,
+		contentType: false
+		}).success(function(res, code, obj){
+			console.log(res);
+			$("#cropModal").modal("hide");
+			$("#upsuccess-block").removeClass("hide");
+			//$('<div class="alert alert-success role="alert">Upload avatar success!</div>').insertBefore("#avatar_upload");
+		});
+	});
+});
