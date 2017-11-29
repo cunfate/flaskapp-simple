@@ -19,8 +19,8 @@ var loadImageFile = function() {
 	oFReader.readAsDataURL(oFile);
 };
 
-var initCropper = (function() {
-	jcrop_api_crop = null;
+var initCropper = function() {
+	var jcrop_api_crop = null;
 	var initJcrop = function() {
 	  $('#upLoadShow').hide();
 
@@ -60,7 +60,8 @@ var initCropper = (function() {
 		type: "POST",
 		cache: false,
 		data: formData,
-		dataType: "multipart/form-data",
+		//dataType: "multipart/form-data",
+		dataType:"json",
 		processData: false,
 		contentType: false
 		}).success(function(res, code, obj){
@@ -68,6 +69,11 @@ var initCropper = (function() {
 			$("#cropModal").modal("hide");
 			$("#upsuccess-block").removeClass("hide");
 			//$('<div class="alert alert-success role="alert">Upload avatar success!</div>').insertBefore("#avatar_upload");
+		}).error(function(res, code, obj){
+			console.log('something error!');
+			console.log(res);
+			console.log(res.responseText);
+			console.log(code);
 		});
 	});
-});
+};

@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import render_template, session, redirect, url_for, flash, abort
-from flask import request, make_response, current_app
+from flask import request, make_response, current_app, jsonify, Response
 from flask_login import current_user, login_required
 from werkzeug import secure_filename
 from PIL import Image
@@ -240,7 +240,9 @@ def crop_avtar_new():
         print('values:')
         a = request.form['area']
         print(a)
-        return '{"success":true}'
+        r = Response(response='{"success": true}', status=200, mimetype="application/json")
+        r.headers["Content-Type"] = "application/json; charset=utf-8"
+        return r
 
 
 @main.route('/avatarnew', methods=['GET'])
